@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>WebCrawler</title>
-		<link rel="icon" tyep="image/jpeg" href="./img/spider-icon.jpg"></link>
+<head>
+	<meta charset="UTF-8">
+	<title>WebCrawler</title>
+	<link rel="icon" tyep="image/jpeg" href="./img/spider-icon.jpg"></link>
 
-		<!-- JavaScript and CSS inclusions-->
-		<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
-		<script type="test/javascript" src="./js/sigma.min.js"></script>
-		<link rel="stylesheet" type="test/css" href="./css/main.css"></link>
-	</head>
+	<!-- JavaScript and CSS inclusions-->
+	<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="./js/sigma.min.js"></script>
+	<script type="text/javascript" src="./js/main.js" ></script>
+	<link rel="stylesheet"  href="./css/main.css"></link>
+</head>
 
-	<body>
-		<div> This is our main html page, please put all javascript files under web/js folder, css files in web/css, images in web/img, and any server stuff under the src folder. Thanks! </div>
-	</body>
+<body>
+	<div class="wrap">
+		<div id="myGraph">
+			<h1> LINK HUNTER </h1>
+
+			<p> This program takes in a url as input and
+				finds all links to that site. It then outputs
+				the information in our output section. </p>
+
+			</div>
+
+		<div id="Info">
+			<div id="container">
+				<div id="Top">
+
+					<h1> INPUT </h1>
+
+					<form name="myform" id="urlForm" action="">
+					      <p>Enter URL: <input type="text" id="url1" name="url"/></p>
+					      <input id="urlButton" type="button" onclick="Hunt();" value="HUNT" />
+					</form>
+
+				</div>
+				<div id="Bottom">
+					 <h1> OUTPUT </h1>
+				 </div>
+			</div>
+		</div>
+	</div>
+
+</body>
 </html>
