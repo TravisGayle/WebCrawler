@@ -10,6 +10,7 @@ import mimetypes
 import os
 import subprocess
 import sys
+import spider
 
 # Constants
 
