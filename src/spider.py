@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import mimetypes
 import json
-
+import sys
 ##############################################################################
 # Spider Class
 # - provides a web crawling framework
@@ -94,6 +94,7 @@ if __name__ == "__main__":
 	#This main just tests the spider
 	def printer(url, pageTxt):
 		print 'visited', url
-
-	s = Spider(seedUrls=['http://www.shreyakumar.com/'], maxPages=1000, scrapingFuncs=[printer])
+	url= sys.argv[1]
+	print url
+	s = Spider(seedUrls=[url], maxPages=1000, scrapingFuncs=[printer])
 	s.crawl()
