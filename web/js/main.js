@@ -11,12 +11,13 @@ $(document).ready(function(){
 
 		var url = document.getElementById('url1');
 
-		if( url.value){
-			alert("The following url was entered: " + url.value);
-		}else{
-			alert("Error: No URL entered");
-		}
+		// if( url.value){
+		// 	alert("The following url was entered: " + url.value);
+		// }else{
+		// 	alert("Error: No URL entered");
+		// }
 
+		graphMe(url.value);
 	}
 
 });
