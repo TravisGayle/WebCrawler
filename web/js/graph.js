@@ -3,7 +3,7 @@ var Origin;
 
 function graphMe(Origin){
 
-	var DOTstring = 'dinetwork {Google.com -> Google.com/Trav -> Google.com/Trav/Brent; 2 -- 4; 2 -> 1 }';
+	var DOTstring = 'dinetwork {1 -> 2 -> 3; 2 -- 4; 2 -> 1 }';
 	var parsedData = vis.network.convertDot(DOTstring);
 
 var nodes = new vis.DataSet([
