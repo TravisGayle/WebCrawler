@@ -76,7 +76,7 @@ width: 100%;
 
 #urlForm{
       text-align: center;
-      
+
 }
 
 #mynetwork {
@@ -89,3 +89,10 @@ width: 100%;
   background-color: white;
 
 }
+
+#graph-container {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
