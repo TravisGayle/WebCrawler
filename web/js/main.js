@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 	$("#urlButton").click(function() {
 		Hunt();
-		httpGetAsync("http://student00.cse.nd.edu:9001/get", callback);
+		httpGetAsync("http://student03.cse.nd.edu:9001/get", callback);
 	});
 
 	function Hunt(){
