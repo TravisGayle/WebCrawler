@@ -17,15 +17,15 @@ function Hunt(){
 	if( isNaN(maxPage.value)){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
-	adjList= httpGetAsync(
+	httpGetAsync(
+			"http://student00.cse.nd.edu:9001/post",
 			url.value, 
-			maxPage.value);		
-		graphMe(url.value);
-//		adjList_to_nodeEdge(adjList);
+			maxPage.value
+			);		
+	//graphMe(url.value);
 }
 
 function httpGetAsync(url, wikipage, maxPages){
-	console.log("new xhr");
 	var xhr = new XMLHttpRequest();
 	var response = [];
 	var data;
@@ -37,6 +37,7 @@ function httpGetAsync(url, wikipage, maxPages){
 			data = JSON.parse(xhr.responseText);
 			callback(data);
 			console.log(data);
+			adjList_to_nodeEdge(data);
 		}
 	}
 	return data;
@@ -55,9 +56,9 @@ function adjList_to_nodeEdge(data){
 		if (!data.hasOwnProperty(key)){
 			continue;
 		}
-		console.log( key + " -> " + data[key]);
-		//graph['nodes'].append{ id: 'key'}
+		graph['nodes'].append{ id: key};
 		//edges
+
 	}
 }
 
