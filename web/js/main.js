@@ -53,13 +53,35 @@ function adjList_to_nodeEdge(data){
 		edges: []
 	}
 	for(var key in data){
+		console.log("Adding another node");
 		if (!data.hasOwnProperty(key)){
 			continue;
 		}
-		graph['nodes'].append{ id: key};
+		console.log(key);
+		graph['nodes'].append
+		  { 
+			"id": key,
+			"label": "test",
+			"x": Math.random(),
+			"y": Math.random(), 
+			"size": 3
+		  };
 		//edges
-
+		for(var i; data[key].length; i++){
+			graph['edges'].append
+			  {
+				"id": i,
+				"source": key,
+				"target": data[key][i] 
+			  };
+		}
 	}
+	sigma.parsers.json( graph, {
+		container: 'mynetwork',
+		settings: {
+			defaultNodeColor: '#ec5148'
+		}
+	});
 }
 
 
