@@ -10,7 +10,9 @@ import sys
 
 ##############################################################################
 # Spider Class
-# - provides a web crawling framework
+# - provides a web crawling framework. Give an array of seed urls to start
+#   crawling from, provide your own custom scraping functions, how many pages
+#   to crawl and you're good to go
 ##############################################################################
 
 class Spider(object):
@@ -20,17 +22,20 @@ class Spider(object):
 	# ---------------------------------------------------------- #
 
 	# constructor
-	def __init__(self, seedUrls=[], scrapingFuncs=[],  maxPages=100, mimeTypes=["text/html"]):
-		self.seedUrls      = seedUrls
-		self.maxPages      = maxPages
-		self.scrapingFuncs = scrapingFuncs
-		self.mimeTypes     = mimeTypes
+	def __init__(self, seedUrls=[], scrapingFuncs=[],  maxPages=100, linksPerPage=5):
+		self.seedUrls      = seedUrls              # An array of urls to begin scraping from
+		self.maxPages      = maxPages              # Total max number of pages for the crawler to visit
+		self.linksPerPage  = linksPerPage          # Max number of links to crawl from a given page
+		self.scrapingFuncs = scrapingFuncs         # An array of functions to run at each page. Each function will recieve object self, current url
+										   #   string, current page text as a string, and an array of links present on the page
+
 		self._googleAPIKey = "AIzaSyCDX-xabz8UM72IapswAGUge-xcWEK8Dno"
 		self._googleAPIUrl = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self._googleAPIKey
 		self._googleMaxReq = 500
 	
 	# Main public function to begin crawling once the constructor has been initialized with appropriate settings
 	def crawl(self):
+		fp = open('links.txt', 'w')
 		toVisit = []
 		for seedUrl in self.seedUrls:
 			toVisit.append(seedUrl)
@@ -41,8 +46,7 @@ class Spider(object):
 				pageTxt = self._getPage(url)
 				links = self._getLinks(pageTxt, url)
 				toVisit = links + toVisit
-				self._runCustomFuncs(url, pageTxt, links)	
-
+				self._runCustomFuncs(url, pageTxt, links)
 
 	# ---------------------------------------------------------- #
 	#                        Private methods                     #
@@ -152,9 +156,10 @@ if __name__ == "__main__":
 				else:
 					self.adjList[url] = [link]	
 		
+		
 
 	url= sys.argv[1]
-	s = Spider(seedUrls=[url], maxPages=5, scrapingFuncs=[createAdjList])
+	s = Spider(seedUrls=[url], maxPages=9000000000, scrapingFuncs=[createAdjList])
 	s.adjList = {}
 	s.crawl()
 	print json.dumps(s.adjList, indent=4, separators=(',', ': '))

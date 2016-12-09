@@ -63,7 +63,6 @@ class WWWHandler(BaseHTTPRequestHandler):
         s = spider.Spider(seedUrls=[url], maxPages=maxPages, scrapingFuncs=[createAdjList])
         s.adjList = {}
         s.crawl()
-        print json.dumps(s.adjList, indent=4, separators=(',', ': '))
         json.dump(s.adjList, self.wfile)
 
 # Usage
@@ -77,11 +76,16 @@ def createAdjList(self, url, pageTxt, links):
     print 'visited', url
     for link in links:
         if link.startswith('https://en.wikipedia.org/wiki'):
+            # add edge url -> link
             if url in self.adjList:
                 if link not in self.adjList[url]:
                     self.adjList[url].append(link)
             else:
                 self.adjList[url] = [link]
+
+            # link to the adjList if not there
+            if link not in self.adjList:
+                self.adjList[link] = []
 
 # Main Execution
 
