@@ -1,9 +1,9 @@
 
 var Origin;
 
-function graphMe(Origin){
-
-	var DOTstring = 'dinetwork {1 -> 2 -> 3; 2 -- 4; 2 -> 1 }';
+function graphMe(Origin, graphString){
+	
+    var DOTstring = 'dinetwork {1 -> 2 -> 3; 2 -- 4; 2 -> 1 }';
 	var parsedData = vis.network.convertDot(DOTstring);
 
 var nodes = new vis.DataSet([
