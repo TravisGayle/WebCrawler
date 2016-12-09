@@ -56,17 +56,29 @@ class WWWHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-        self.wfile.write("hey hey hey hey!")
         
-#        p = subprocess.Popen(['./src/dijkstras'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
- #       d = [map(int, line.split()) for line in p.communicate(data)[0].splitlines()]
- #       json.dump({'path': d[1:], 'cost': d[0]}, self.wfile)
+        #TODO somehow get the url and the maxPages from the post request instead of the hardcoded value
+        url = 'https://en.wikipedia.org/wiki/Arizona'
+        maxPages = 50
+        s = Spider(seedUrls=[url], maxPages=maxPages, scrapingFuncs=[createAdjList])
+	s.adjList = {}
+	s.crawl()
+        json.dump(s.adjList, self.wfile)
 
 # Usage
 
 def usage(exit_code):
     print >>sys.stderr, 'usage: {} -d SERVER_ROOT -p SERVER_PORT'.format(os.path.basename(sys.argv[0]))
     sys.exit(exit_code)
+
+    def createAdjList(self, url, pageTxt, links):
+        for link in links:
+            if link.startswith('https://en.wikipedia.org/wiki') and url in self.adjList:
+                if link not in self.adjList[url]:
+                    self.adjList[url].append(link)
+                else:
+                    self.adjList[url] = [link]	
+    
 
 # Main Execution
 
