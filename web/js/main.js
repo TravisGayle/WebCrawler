@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 	$("#urlButton").click(function() {
 		Hunt();
-		httpGetAsync("http://student00.cse.nd.edu:9001/get", callback);		
+		httpGetAsync("http://student00.cse.nd.edu:9001/post", callback);		
 	});
 
 	function Hunt(){
@@ -23,14 +23,19 @@ $(document).ready(function(){
 		graphMe(url.value);
 	}
 
-	function httpGetAsync(url, callback)	{
+	function httpGetAsync(url, wikipage, maxPages, callback){
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", url, true);
-		xhr.send();
+		var response = [];
+		var data;
+		response.push(wikipage + ' ' +  maxPages);
+		xhr.open("POST", url, true);
+		xhr.send(response.join('\n'));
 
 		xhr.onreadystatechange = function()	{
 			if (xhr.readyState == 4 && xhr.status == 200){
-				callback(xhr.responseText);
+				data = JSON.parse(xhr.responseText);
+				callback(data);
+				console.log(data);
 			}
 		}
 	}
