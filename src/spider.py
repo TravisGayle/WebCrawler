@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import mimetypes
 import json
+import sys
 
 ##############################################################################
 # Spider Class
@@ -11,7 +12,12 @@ import json
 ##############################################################################
 
 class Spider(object):
-	# Constructor
+
+	# ---------------------------------------------------------- #
+	#                        Public methods                      #
+	# ---------------------------------------------------------- #
+
+	# constructor
 	def __init__(self, seedUrls=[], scrapingFuncs=[],  maxPages=1000, mimeTypes=["text/html"]):
 		self.seedUrls      = seedUrls
 		self.maxPages      = maxPages
@@ -34,6 +40,11 @@ class Spider(object):
 				toVisit = self._getLinks(pageTxt, url) + toVisit
 				self._runCustomFuncs(url, pageTxt)	
 
+
+	# ---------------------------------------------------------- #
+	#                        Private methods                     #
+	# ---------------------------------------------------------- #
+	
 	# Makes a get request to the given url, returns the page text as a string
 	def _getPage(self, url):
 		try:
@@ -46,9 +57,11 @@ class Spider(object):
 	#Strips the links from an html page to know where to continue crawling
 	def _getLinks(self, pageTxt, root):
 		#strings of JSON to send to the google safe browsing api
-		jsonClient = '{"client": {"clientId": "crawler", "clientVersion": "0.0.1"},'
-		jsonThreat = '"threatInfo": {"threatTypes": ["THREAT_TYPE_UNSPECIFIED", "MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE", "POTENTIALLY_HARMFUL_APPLICATION"], "platformTypes":["WINDOWS", "LINUX", "OSX"], "threatEntryTypes": ["URL"], "threatEntries": ['
-		jsonEnd = ']}}'
+		jsonBasicInfo  = '{"client": {"clientId": "crawler", "clientVersion": "0.0.1"},"threatInfo": {"threatTypes": '
+		jsonThreatType = '["THREAT_TYPE_UNSPECIFIED", "MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE", "POTENTIALLY_HARMFUL_APPLICATION"],' 
+		jsonPlatforms  = '"platformTypes":["WINDOWS", "LINUX", "OSX"],'
+		jsonThreat     = ' "threatEntryTypes": ["URL"], "threatEntries": ['
+		jsonEnd        = ']}}'
 		
 		#loop over all link tags to get new links to visit
 		urls = []
@@ -60,29 +73,14 @@ class Spider(object):
 
 			#pull all links from page, adding to the google safe browsing threat json and urls array
 			link = aTag.get('href')
-			if mimetypes.guess_type(link)[0] in self.mimeTypes:
-				if not link.startswith('http') or not link.startswith('https'):
-					link = root + link
+			link = self._cleanLink(link, root)
+			if link:
 				urls.append(link)
 				jsonThreat = jsonThreat + '{"url": "' + link + '"},'
 		
 		#Make request to google safe browsing lookup api for suspicious links
-		if urls != []:
-			apiRequestJson = jsonClient + jsonThreat[:-1] + jsonEnd
-			response = requests.post(self._googleAPIUrl, data=apiRequestJson)
-			if response.status_code != 200:
-				print "Issue with google safe browsing lookup API request"
-				print response
-				print response.text
-				return []
-			response = response.json()
-					
-			#Remove any urls that google has flagged as dangerous
-			if response != {}:
-				for entry in response['matches']:
-					dangerousURL = entry['threat']['url']
-					if dangerousURL in urls:
-						urls.remove(dangerousURL)
+		apiRequestJson = jsonBasicInfo + jsonThreatType + jsonPlatforms + jsonThreat[:-1] + jsonEnd
+		urls = self._removeDangerousUrls(urls, apiRequestJson)
 		return urls
 
 	# Runs any given functions for each page
@@ -90,10 +88,48 @@ class Spider(object):
 		for func in self.scrapingFuncs:
 			func(url, pageTxt)
 
+	# Remove dangerous urls found by googles safe browsing api
+	def _removeDangerousUrls(self, urls, googleApiRequestJSON):
+		if not urls:
+			return []
+
+		response = requests.post(self._googleAPIUrl, data=googleApiRequestJSON)
+		if response.status_code != 200:
+			print "Issue with google safe browsing lookup API request"
+			print response
+			print response.text
+			return []
+		response = response.json()
+				
+		#Remove any urls that google has flagged as dangerous
+		if response != {}:
+			for entry in response['matches']:
+				dangerousURL = entry['threat']['url']
+				if dangerousURL in urls:
+					urls.remove(dangerousURL)
+		return urls
+
+	#append root if necesary to links, remove some common dead links
+	def _cleanLink(self, link, root):
+		badLinks = ['#', '', ' ',None]
+		if link in badLinks:
+			return ''
+		else:
+			if not link.startswith('http') or not link.startswith('https'):
+				link = root + link
+			return link
+
+
+#########################################################################
+# Main execution 
+#  - for class testing
+########################################################################
+
 if __name__ == "__main__":
-	#This main just tests the spider
 	def printer(url, pageTxt):
 		print 'visited', url
-
-	s = Spider(seedUrls=['http://www.shreyakumar.com/'], maxPages=1000, scrapingFuncs=[printer])
+	
+	url= sys.argv[1]
+	s = Spider(seedUrls=[url], maxPages=1000, scrapingFuncs=[printer])
 	s.crawl()
+	
