@@ -58,27 +58,30 @@ class WWWHandler(BaseHTTPRequestHandler):
         self.end_headers()
         
         #TODO somehow get the url and the maxPages from the post request instead of the hardcoded value
-        url = 'https://en.wikipedia.org/wiki/Arizona'
-        maxPages = 50
-        s = Spider(seedUrls=[url], maxPages=maxPages, scrapingFuncs=[createAdjList])
-	s.adjList = {}
-	s.crawl()
+        url = 'https://en.wikipedia.org/wiki/Tom_Hanks'
+        maxPages = 10
+        s = spider.Spider(seedUrls=[url], maxPages=maxPages, scrapingFuncs=[createAdjList])
+        s.adjList = {}
+        s.crawl()
+        print json.dumps(s.adjList, indent=4, separators=(',', ': '))
         json.dump(s.adjList, self.wfile)
 
 # Usage
-
 def usage(exit_code):
     print >>sys.stderr, 'usage: {} -d SERVER_ROOT -p SERVER_PORT'.format(os.path.basename(sys.argv[0]))
     sys.exit(exit_code)
 
-    def createAdjList(self, url, pageTxt, links):
-        for link in links:
-            if link.startswith('https://en.wikipedia.org/wiki') and url in self.adjList:
+
+# Scraping function for the spider class to run for each visited url
+def createAdjList(self, url, pageTxt, links):
+    print 'visited', url
+    for link in links:
+        if link.startswith('https://en.wikipedia.org/wiki'):
+            if url in self.adjList:
                 if link not in self.adjList[url]:
                     self.adjList[url].append(link)
-                else:
-                    self.adjList[url] = [link]	
-    
+            else:
+                self.adjList[url] = [link]
 
 # Main Execution
 

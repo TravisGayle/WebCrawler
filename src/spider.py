@@ -154,7 +154,7 @@ if __name__ == "__main__":
 		
 
 	url= sys.argv[1]
-	s = Spider(seedUrls=[url], maxPages=50, scrapingFuncs=[createAdjList])
+	s = Spider(seedUrls=[url], maxPages=5, scrapingFuncs=[createAdjList])
 	s.adjList = {}
 	s.crawl()
 	print json.dumps(s.adjList, indent=4, separators=(',', ': '))
