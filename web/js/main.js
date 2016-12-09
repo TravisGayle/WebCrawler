@@ -52,36 +52,40 @@ function adjList_to_nodeEdge(data){
 		nodes: [],
 		edges: []
 	}
+
+	var myGraph = new graph();
 	for(var key in data){
 		console.log("Adding another node");
 		if (!data.hasOwnProperty(key)){
 			continue;
 		}
 		console.log(key);
-		graph['nodes'].append
-		  { 
-			"id": key,
-			"label": "test",
-			"x": Math.random(),
-			"y": Math.random(), 
-			"size": 3
-		  };
+		graph['nodes'].push({ 
+			id: key,
+			label: "test",
+			x: Math.random(),
+			y: Math.random(), 
+			size: 3
+		  });
 		//edges
-		for(var i; data[key].length; i++){
-			graph['edges'].append
-			  {
-				"id": i,
-				"source": key,
-				"target": data[key][i] 
-			  };
+		for(var i; i < data[key].length; i++){
+			graph['edges'].push({
+				id: i,
+				source: key,
+				target: data[key][i] 
+			  });
 		}
 	}
-	sigma.parsers.json( graph, {
+	var myGraph = new graph();
+	myGraph.read(graph);
+
+	/*sigma.parsers.json( graph, {
 		container: 'mynetwork',
 		settings: {
 			defaultNodeColor: '#ec5148'
 		}
 	});
+	*/
 }
 
 
