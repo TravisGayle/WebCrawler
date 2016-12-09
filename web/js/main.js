@@ -13,13 +13,10 @@ $(document).ready(function(){
 	function Hunt(){
 
 		var url = document.getElementById('url1');
-
-		// if( url.value){
-		// 	alert("The following url was entered: " + url.value);
-		// }else{
-		// 	alert("Error: No URL entered");
-		// }
-		
+		var maxPage = document.getElementById('maxPage1');
+		if( isNaN(maxPage.value)){
+			alert("ERROR: " + maxPage.value + " is not a number!");
+		}
 		graphMe(url.value);
 	}
 
@@ -40,6 +37,6 @@ $(document).ready(function(){
 		}
 	}
 	function callback(text){
-		document.getElementById("Bottom").innerHTML = text;	
+		document.getElementById("Bottom").innerHTML = text;
 	}
 })
