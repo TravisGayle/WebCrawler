@@ -56,10 +56,8 @@ class WWWHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-        
-        #TODO somehow get the url and the maxPages from the post request instead of the hardcoded value
-        url = 'https://en.wikipedia.org/wiki/Tom_Hanks'
-        maxPages = 10
+        url = data.split(' ')[0]
+        maxPages = int(data.split(' ')[1])
         s = spider.Spider(seedUrls=[url], maxPages=maxPages, scrapingFuncs=[createAdjList])
         s.adjList = {}
         s.crawl()

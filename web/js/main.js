@@ -6,10 +6,10 @@ $(document).ready(function(){
 	//Put code here
 
 	$("#urlButton").click(function() {
-		Hunt();
-		httpGetAsync("http://student00.cse.nd.edu:9001/post", callback);		
+		Hunt();	
 	});
-
+		
+})
 	function Hunt(){
 
 		var url = document.getElementById('url1');
@@ -17,17 +17,21 @@ $(document).ready(function(){
 		if( isNaN(maxPage.value)){
 			alert("ERROR: " + maxPage.value + " is not a number!");
 		}
-		graphMe(url.value);
+		var adjList = httpGetAsync(
+			"http://student00.cse.nd.edu:9001/post", 
+			url.value, 
+			maxPage.value);		
+//		graphMe(url.value);
+//		adjList_to_nodeEdge(adjList);
 	}
 
-	function httpGetAsync(url, wikipage, maxPages, callback){
+	function httpGetAsync(url, wikipage, maxPages){
 		var xhr = new XMLHttpRequest();
 		var response = [];
 		var data;
 		response.push(wikipage + ' ' +  maxPages);
 		xhr.open("POST", url, true);
 		xhr.send(response.join('\n'));
-
 		xhr.onreadystatechange = function()	{
 			if (xhr.readyState == 4 && xhr.status == 200){
 				data = JSON.parse(xhr.responseText);
@@ -35,8 +39,26 @@ $(document).ready(function(){
 				console.log(data);
 			}
 		}
+		return data;
 	}
+
 	function callback(text){
 		document.getElementById("Bottom").innerHTML = text;
 	}
-})
+/*	
+	function adjList_to_nodeEdge(data){
+		var graph = {
+			nodes: [],
+			edges: []
+		}
+		for(var key in data){
+			if (!data.hasOwnProperty(key)){
+				continue;
+			}
+			console.log( key + " -> " + data[key]);
+			//graph['nodes'].append{ id: 'key'}
+			//edges
+		}
+	}
+*/
+
