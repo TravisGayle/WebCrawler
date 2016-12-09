@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 import requests
 import mimetypes
 import json
+import urlparse
 import sys
+
 
 ##############################################################################
 # Spider Class
@@ -18,7 +20,7 @@ class Spider(object):
 	# ---------------------------------------------------------- #
 
 	# constructor
-	def __init__(self, seedUrls=[], scrapingFuncs=[],  maxPages=1000, mimeTypes=["text/html"]):
+	def __init__(self, seedUrls=[], scrapingFuncs=[],  maxPages=100, mimeTypes=["text/html"]):
 		self.seedUrls      = seedUrls
 		self.maxPages      = maxPages
 		self.scrapingFuncs = scrapingFuncs
@@ -37,8 +39,9 @@ class Spider(object):
 				numVisited = numVisited + 1
 				url = toVisit.pop()
 				pageTxt = self._getPage(url)
-				toVisit = self._getLinks(pageTxt, url) + toVisit
-				self._runCustomFuncs(url, pageTxt)	
+				links = self._getLinks(pageTxt, url)
+				toVisit = links + toVisit
+				self._runCustomFuncs(url, pageTxt, links)	
 
 
 	# ---------------------------------------------------------- #
@@ -64,7 +67,7 @@ class Spider(object):
 		jsonEnd        = ']}}'
 		
 		#loop over all link tags to get new links to visit
-		urls = []
+		links = []
 		soup = BeautifulSoup(pageTxt, 'html.parser')
 		for index, aTag in enumerate(soup.find_all('a')):
 			#if a page has more links than we can make one request to google for, just take up to _googleMaxReq
@@ -75,50 +78,63 @@ class Spider(object):
 			link = aTag.get('href')
 			link = self._cleanLink(link, root)
 			if link:
-				urls.append(link)
+				links.append(link)
 				jsonThreat = jsonThreat + '{"url": "' + link + '"},'
 		
 		#Make request to google safe browsing lookup api for suspicious links
 		apiRequestJson = jsonBasicInfo + jsonThreatType + jsonPlatforms + jsonThreat[:-1] + jsonEnd
-		urls = self._removeDangerousUrls(urls, apiRequestJson)
-		return urls
+		links = self._removeDangerousUrls(links, apiRequestJson)
+		return links
 
 	# Runs any given functions for each page
-	def _runCustomFuncs(self, url, pageTxt):
+	def _runCustomFuncs(self, pageUrl, pageTxt, links):
 		for func in self.scrapingFuncs:
-			func(url, pageTxt)
+			func(self, pageUrl, pageTxt, links)
 
 	# Remove dangerous urls found by googles safe browsing api
 	def _removeDangerousUrls(self, urls, googleApiRequestJSON):
 		if not urls:
-			return []
-
-		response = requests.post(self._googleAPIUrl, data=googleApiRequestJSON)
-		if response.status_code != 200:
-			print "Issue with google safe browsing lookup API request"
-			print response
-			print response.text
-			return []
-		response = response.json()
+			return self._handleError('No array of urls provided to check')
+		try:
+			response = requests.post(self._googleAPIUrl, data=googleApiRequestJSON)
+			if response.status_code != 200:
+				return self._handleError("Issue with google safe browsing lookup API request", response)
+			response = response.json()
 				
-		#Remove any urls that google has flagged as dangerous
-		if response != {}:
-			for entry in response['matches']:
-				dangerousURL = entry['threat']['url']
-				if dangerousURL in urls:
-					urls.remove(dangerousURL)
-		return urls
+			#Remove any urls that google has flagged as dangerous
+			if response != {}:
+				for entry in response['matches']:
+					dangerousURL = entry['threat']['url']
+					if dangerousURL in urls:
+						urls.remove(dangerousURL)
+			return urls
 
+		except:
+			return self._handleError("Unknown issue with google safe browsing API")
+		
+		
 	#append root if necesary to links, remove some common dead links
-	def _cleanLink(self, link, root):
-		badLinks = ['#', '', ' ',None]
-		if link in badLinks:
+	def _cleanLink(self, link, curUrl):
+		badLinks = ['#', '', ' ', None] #common bad links I came across
+		if link in badLinks or link.startswith('#'):
 			return ''
 		else:
-			if not link.startswith('http') or not link.startswith('https'):
-				link = root + link
+			if self._linkIsRelative(link):
+				link = urlparse.urljoin(curUrl, link)
 			return link
 
+	def _linkIsRelative(self, link):
+		if link.startswith('http') or link.startswith('https'):
+			return False
+		else:
+			return True
+
+	def _handleError(self, message, response=''):
+		print message
+		if response:
+			print "HTTP/HTTPS status code:", response.status_code
+			print response.text
+		return []
 
 #########################################################################
 # Main execution 
@@ -126,10 +142,20 @@ class Spider(object):
 ########################################################################
 
 if __name__ == "__main__":
-	def printer(url, pageTxt):
+	def createAdjList(self, url, pageTxt, links):
 		print 'visited', url
-	
+		for link in links:
+			if link.startswith('https://en.wikipedia.org/wiki'):
+				if url in self.adjList:
+					if link not in self.adjList[url]:
+						self.adjList[url].append(link)
+				else:
+					self.adjList[url] = [link]	
+		
+
 	url= sys.argv[1]
-	s = Spider(seedUrls=[url], maxPages=1000, scrapingFuncs=[printer])
+	s = Spider(seedUrls=[url], maxPages=50, scrapingFuncs=[createAdjList])
+	s.adjList = {}
 	s.crawl()
+	print json.dumps(s.adjList, indent=4, separators=(',', ': '))
 	
