@@ -32,7 +32,9 @@ class WWWHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
             self.path = '/index.html'
-
+        elif self.path == "/get":
+            self.wfile.write("whhuuuut")
+            return
         mimetype = determine_mimetype(self.path)
         realpath = os.path.abspath(WWW_ROOT + self.path)
 
@@ -54,10 +56,11 @@ class WWWHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-
-        p = subprocess.Popen(['./src/dijkstras'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        d = [map(int, line.split()) for line in p.communicate(data)[0].splitlines()]
-        json.dump({'path': d[1:], 'cost': d[0]}, self.wfile)
+        self.wfile.write("hey hey hey hey!")
+        
+#        p = subprocess.Popen(['./src/dijkstras'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+ #       d = [map(int, line.split()) for line in p.communicate(data)[0].splitlines()]
+ #       json.dump({'path': d[1:], 'cost': d[0]}, self.wfile)
 
 # Usage
 
