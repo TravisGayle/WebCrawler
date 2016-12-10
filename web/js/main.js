@@ -6,6 +6,7 @@ $(document).ready(function(){
 	//Put code here
 
 	$("#urlButton").click(function() {
+		$('mynetwork').remove();
 		Hunt();
 	});
 		
@@ -14,22 +15,24 @@ $(document).ready(function(){
 function Hunt(){
 	var url = document.getElementById('url1');
 	var maxPage = document.getElementById('maxPage1');
+	var maxLinks = document.getElementById('maxLinks1');
 	if( isNaN(maxPage.value)){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(
-			"http://student03.cse.nd.edu:9001/post",
+			"http://student00.cse.nd.edu:9001/post",
 			url.value, 
-			maxPage.value
+			maxPage.value,
+			maxLinks.value
 			);		
 	//graphMe(url.value);
 }
 
-function httpGetAsync(url, wikipage, maxPages){
+function httpGetAsync(url, wikipage, maxPages, maxLinks){
 	var xhr = new XMLHttpRequest();
 	var response = [];
 	var data;
-	response.push(wikipage + ' ' +  maxPages);
+	response.push(wikipage + ' ' +  maxPages+ ' ' + maxLinks);
 	xhr.open("POST", url, true);
 	xhr.send(response.join('\n'));
 	xhr.onreadystatechange = function()	{
@@ -50,31 +53,34 @@ function adjList_to_nodeEdge(data){
 		nodes: [],
 		edges: []
 	}
-	
-	
+	var daStart;
+	var daEnd;
+	console.log(data);
 	for(var key in data){
-		if (!data.hasOwnProperty(key)){
-			continue;
-		}
-		console.log(key);
+		//if (!data.hasOwnProperty(key)){
+	//		continue;
+	//	}
+      	var page = key.split('/');
+	
 		graphData['nodes'].push({ 
 			id: key,
-			label: "heey",
+			label: page[page.length -1],
 			x: Math.random(),
 			y: Math.random(),
 			color: '#00FFFF',
 			size: 2
 		  });
 		//edges
-		for(var i; i < data[key].length; i++){
+		console.log(data, key);
+		for(var i=0; i < data[key].length; i++){
 			graphData['edges'].push({
-				id: 'e'+i,
+				id: key+i,
 				source: key,
 				target: data[key][i],
 				color: 'lightgreen',
 				type: 'arrow'
-			  });
-			console.log(data);
+			});
+			daEnd = data[key][i];
 		}
 	}
 	var s = new sigma({
@@ -84,6 +90,7 @@ function adjList_to_nodeEdge(data){
 			defaultNodeColor: '#00FFFF'
 		}
 	});
+
 /*
 	var config = {
 		nodeMargin: .1,
@@ -104,6 +111,15 @@ function adjList_to_nodeEdge(data){
 	// Start the algorithm:
 	s.startNoverlap();
 */
+
+	daStart= data[0]
+	var shortPath =	dijkstras(data, daStart, daEnd);
+	for( var key in shortPath){
+		var n = sigmaInstance.graph.nodes(key);
+		key.size = 4;
+		key.color = 'red';	
+	}
+	sigmaInstance.refresh({ skipIndexation: true });
 }
 
 
