@@ -40,7 +40,6 @@ function httpGetAsync(url, wikipage, maxPages){
 			adjList_to_nodeEdge(data);
 		}
 	}
-	return data;
 }
 
 function callback(text){
@@ -52,10 +51,9 @@ function adjList_to_nodeEdge(data){
 		nodes: [],
 		edges: []
 	}
-
-	var myGraph = new graph();
+	
+	
 	for(var key in data){
-		console.log("Adding another node");
 		if (!data.hasOwnProperty(key)){
 			continue;
 		}
@@ -76,16 +74,16 @@ function adjList_to_nodeEdge(data){
 			  });
 		}
 	}
-	var myGraph = new graph();
-	myGraph.read(graph);
+	//var myGraph = new sigma.classes.graph();
+	//myGraph.read(graph);
 
-	/*sigma.parsers.json( graph, {
+	sigma.parsers.json( graph, {
 		container: 'mynetwork',
 		settings: {
 			defaultNodeColor: '#ec5148'
 		}
 	});
-	*/
+	
 }
 
 
