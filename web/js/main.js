@@ -29,7 +29,7 @@ function Hunt(){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(
-			"http://student03.cse.nd.edu:9001/post",
+			"http://student00.cse.nd.edu:9001/post",
 			url.value,
 			maxPage.value,
 			maxLinks.value
@@ -47,24 +47,25 @@ function httpGetAsync(url, wikipage, maxPages, maxLinks){
 	xhr.onreadystatechange = function()	{
 		if (xhr.readyState == 4 && xhr.status == 200){
 			data = JSON.parse(xhr.responseText);
-			callback(data);
-			adjList_to_nodeEdge(data);
+			//callback(data);
+			adjList_to_nodeEdge(wikipage, data);
 		}
 	}
 }
-
+/*
 function callback(text){
 	document.getElementById("Bottom").innerHTML = text;
 }
+*/
+
 	
-function adjList_to_nodeEdge(data){
+function adjList_to_nodeEdge(urlStart, data){
 	var graphData = {
 		nodes: [],
 		edges: []
 	}
-	var daStart;
+	var daStart = urlStart;
 	var daEnd;
-	console.log(data);
 	for(var key in data){
 		//if (!data.hasOwnProperty(key)){
 	//		continue;
@@ -116,15 +117,16 @@ function adjList_to_nodeEdge(data){
 	s.startNoverlap();
 
 
-	daStart= data[0]
+	
 	var shortPath = dijkstras(data, daStart, daEnd);
-	for( var key in shortPath){
-		var n = sigmaInstance.graph.nodes(key);
-		key.size = 4;
-		key.color = 'red';	
-	}
-	sigmaInstance.refresh({ skipIndexation: true });
-
+	s.graph.nodes().forEach(function(n){
+		for(var i=0; i<shortPath.length; i++){
+			if(shortPath[i] == n.id){
+				n.size = 4;
+				n.color = 'red';
+			}
+		}
+	});
 }
 
 
