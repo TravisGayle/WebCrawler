@@ -92,13 +92,35 @@ function adjList_to_nodeEdge(data){
 			daEnd = data[key][i];
 		}
 	}
-	s = new sigma({
+	var s = new sigma({
 		graph: graphData,
 		container: 'mynetwork',
 		setting: {
 			defaultNodeColor: '#00FFFF'
 		}
 	});
+
+/*
+	var config = {
+		nodeMargin: .1,
+		scaleNodes: 1.05,
+		gridSize: 75,
+		easing: 'quadraticInOut',
+		duration: 10000
+	};
+
+	// Configure the algorithm
+	var listener = s.configNoverlap(config);
+	
+	// Bind all events:
+	listener.bind('start stop interpolate', function(event) {
+		console.log(event.type);
+	});
+	
+	// Start the algorithm:
+	s.startNoverlap();
+*/
+
 	daStart= data[0]
 	var shortPath =	dijkstras(data, daStart, daEnd);
 	for( var key in shortPath){
