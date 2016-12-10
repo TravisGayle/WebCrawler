@@ -100,26 +100,37 @@ function adjList_to_nodeEdge(urlStart, data){
 	//Bind clicks
 	s.bind('clickNode', function(e){
 		var nodeId = e.data.node.id;
-		if (adjList_to_nodeEdge.start == undefined) {
-			adjList_to_nodeEdge.start = nodeId;	
-		} else if (adjList_to_nodeEdge.end == undefined){
+		if (adjList_to_nodeEdge.start == undefined) { // Selected the starting node
+			adjList_to_nodeEdge.start = nodeId;
+			adjList_to_nodeEdge.end = true;
+			e.data.node.color = 'red';
+		} else if (adjList_to_nodeEdge.end){ // Selected the ending node
 			var shortPath = dijkstras(data, adjList_to_nodeEdge.start, nodeId);
-			s.graph.nodes().forEach(function(n){
-				for(var i=0; i<shortPath.length; i++){
-					if(shortPath[i] == n.id){
-						n.size = 5;
-						n.color = 'red';
+			if (shortPath[0] == nodeId) { //there is no path
+				alert("No path between the selected nodes. Be aware the graph is directed");
+			} else {
+				//Update colors to show shortest path
+				s.graph.nodes().forEach(function(n){
+					for(var i=0; i<shortPath.length; i++){
+						if(shortPath[i] == n.id){
+							n.size = 5;
+							n.color = 'red';
+						}
 					}
-				}
-			});
-		} else {
+				});
+			}
+			adjList_to_nodeEdge.end = false;
+		} else { //Selected the starting node after finding a shortest path
+			//reset coloring and record node selection
 			adjList_to_nodeEdge.start = nodeId;
 			s.graph.nodes().forEach(function(n){
 				n.color = '#00FFFF';
 				n.size = 2;
 			});
-
+			adjList_to_nodeEdge.end = true;
+			e.data.node.color = 'red';
 		}
+		s.refresh();
 	});
 }
 
