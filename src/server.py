@@ -32,9 +32,7 @@ class WWWHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
             self.path = '/index.html'
-        elif self.path == "/get":
-            self.wfile.write("whhuuuut")
-            return
+
         mimetype = determine_mimetype(self.path)
         realpath = os.path.abspath(WWW_ROOT + self.path)
 
