@@ -28,6 +28,7 @@ function hunt(){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(postUrl, url.value, maxPage.value, maxLinks.value);		
+	adjList_to_nodeEdge.start = undefined;
 }
 
 function httpGetAsync(url, wikipage, maxPages, maxLinks){
@@ -111,6 +112,10 @@ function adjList_to_nodeEdge(urlStart, data){
 			var shortPath = dijkstras(data, adjList_to_nodeEdge.start, nodeId);
 			if (shortPath[0] == nodeId) { //there is no path
 				alert("No path between the selected nodes. Be aware the graph is directed");
+				s.graph.nodes().forEach(function(n){
+							n.size = 2;
+							n.color = '#00FFFF';
+				});
 			} else {
 				//Update colors to show shortest path
 				s.graph.nodes().forEach(function(n){
