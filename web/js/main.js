@@ -7,10 +7,19 @@ $(document).ready(function(){
 
 	$("#urlButton").click(function() {
 		$('mynetwork').remove();
+        flusher();
 		Hunt();
 	});
 		
 });
+
+
+function flusher(){
+	var div = document.getElementById('mynetwork');
+	while(div.firstChild){
+	    div.removeChild(div.firstChild);
+	}
+}
 
 function Hunt(){
 	var url = document.getElementById('url1');
@@ -93,5 +102,6 @@ function adjList_to_nodeEdge(data){
 // input:  https://en.wikipedia.org/wiki/Food
 // output: Food
 //function(
+
 
 
