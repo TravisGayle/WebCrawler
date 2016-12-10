@@ -18,7 +18,7 @@ function Hunt(){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(
-			"http://student00.cse.nd.edu:9001/post",
+			"http://student00.cse.nd.edu:9003/post",
 			url.value, 
 			maxPage.value
 			);		
@@ -60,41 +60,31 @@ function adjList_to_nodeEdge(data){
 		console.log(key);
 		graphData['nodes'].push({ 
 			id: key,
-			label: "test",
+			label: "heey",
 			x: Math.random(),
-			y: Math.random(), 
-			size: 3
+			y: Math.random(),
+			color: '#00FFFF',
+			size: 2
 		  });
 		//edges
 		for(var i; i < data[key].length; i++){
 			graphData['edges'].push({
-				id: i,
+				id: 'e'+i,
 				source: key,
-				target: data[key][i] 
+				target: data[key][i],
+				color: 'lightgreen',
+				type: 'arrow'
 			  });
+			console.log(data);
 		}
 	}
 	s = new sigma({
 		graph: graphData,
 		container: 'mynetwork',
 		setting: {
-			defaultNodeColor: '#ec5148'
+			defaultNodeColor: '#00FFFF'
 		}
 	});
-/*
-	var myGraph = new sigma.classes.graph();
-	myGraph.read(graph);
-	
-	localStorage.setItem('myStorage', JSON.stringify(graph));
-		
-	sigma.parsers.json( localStorage.getItem('myStorage'), {
-		container: 'mynetwork',
-		settings: {
-			defaultNodeColor: '#ec5148'
-		}
-	});
-*/
-	
 }
 
 

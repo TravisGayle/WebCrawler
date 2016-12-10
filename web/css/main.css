@@ -80,11 +80,11 @@ width: 100%;
 }
 
 #mynetwork {
-  width: 600px;
+  width: 760px;
   height: 600px;
   border: 1px solid lightgray;
-  width: 60%;
-  height: 60%;
+  //width: 60%;
+  //height: 60%;
   margin: 0 auto;
   background-color: white;
 
