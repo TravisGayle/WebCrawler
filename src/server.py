@@ -56,7 +56,9 @@ class WWWHandler(BaseHTTPRequestHandler):
         self.end_headers()
         url = data.split(' ')[0]
         maxPages = int(data.split(' ')[1])
-        s = spider.Spider(seedUrls=[url], maxPages=maxPages, scrapingFuncs=[createAdjList])
+         
+        maxLinks = int(data.split(' ')[2])
+        s = spider.Spider(seedUrls=[url], maxPages=maxPages,linksPerPage=maxLinks, scrapingFuncs=[createAdjList])
         s.adjList = {}
         s.crawl()
         json.dump(s.adjList, self.wfile)

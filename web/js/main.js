@@ -6,6 +6,7 @@ $(document).ready(function(){
 	//Put code here
 
 	$("#urlButton").click(function() {
+		$('mynetwork').remove();
 		Hunt();
 	});
 		
@@ -14,22 +15,24 @@ $(document).ready(function(){
 function Hunt(){
 	var url = document.getElementById('url1');
 	var maxPage = document.getElementById('maxPage1');
+	var maxLinks = document.getElementById('maxLinks1');
 	if( isNaN(maxPage.value)){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(
 			"http://student00.cse.nd.edu:9003/post",
 			url.value, 
-			maxPage.value
+			maxPage.value,
+			maxLinks.value
 			);		
 	//graphMe(url.value);
 }
 
-function httpGetAsync(url, wikipage, maxPages){
+function httpGetAsync(url, wikipage, maxPages, maxLinks){
 	var xhr = new XMLHttpRequest();
 	var response = [];
 	var data;
-	response.push(wikipage + ' ' +  maxPages);
+	response.push(wikipage + ' ' +  maxPages+ ' ' + maxLinks);
 	xhr.open("POST", url, true);
 	xhr.send(response.join('\n'));
 	xhr.onreadystatechange = function()	{
