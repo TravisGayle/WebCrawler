@@ -20,7 +20,7 @@ function Hunt(){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(
-			"http://student00.cse.nd.edu:9003/post",
+			"http://student00.cse.nd.edu:9001/post",
 			url.value, 
 			maxPage.value,
 			maxLinks.value
@@ -59,10 +59,11 @@ function adjList_to_nodeEdge(data){
 		//if (!data.hasOwnProperty(key)){
 	//		continue;
 	//	}
+       var page = key.split('/');
 		console.log(key);
 		graphData['nodes'].push({ 
 			id: key,
-			label: "heey",
+			label: page[page.length -1],
 			x: Math.random(),
 			y: Math.random(),
 			color: '#00FFFF',
