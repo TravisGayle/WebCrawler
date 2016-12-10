@@ -22,6 +22,7 @@ function flusher(){
 }
 
 function Hunt(){
+	var postUrl = "http://student03.cse.nd.edu:9001/post";
 	var url = document.getElementById('url1');
 	var maxPage = document.getElementById('maxPage1');
 	var maxLinks = document.getElementById('maxLinks1');
@@ -29,7 +30,7 @@ function Hunt(){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(
-			"http://student00.cse.nd.edu:9001/post",
+			postUrl,
 			url.value,
 			maxPage.value,
 			maxLinks.value
