@@ -1,14 +1,12 @@
-// in javascrip})M;at file for index.html
-
-//	https://www.kirupa.com/html5/making_http_requests_js.htm
+// Main controller file for index.html
 
 $(document).ready(function(){
 	//Put code here
 
 	$("#urlButton").click(function() {
 		$('mynetwork').remove();
-        flusher();
-		Hunt();
+        	flusher();
+		hunt();
 	});
 		
 });
@@ -21,7 +19,7 @@ function flusher(){
 	}
 }
 
-function Hunt(){
+function hunt(){
 	var postUrl = "http://student03.cse.nd.edu:9001/post";
 	var url = document.getElementById('url1');
 	var maxPage = document.getElementById('maxPage1');
@@ -29,13 +27,7 @@ function Hunt(){
 	if( isNaN(maxPage.value)){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
-	httpGetAsync(
-			postUrl,
-			url.value,
-			maxPage.value,
-			maxLinks.value
-			);		
-	//graphMe(url.value);
+	httpGetAsync(postUrl, url.value, maxPage.value, maxLinks.value);		
 }
 
 function httpGetAsync(url, wikipage, maxPages, maxLinks){
@@ -48,16 +40,10 @@ function httpGetAsync(url, wikipage, maxPages, maxLinks){
 	xhr.onreadystatechange = function()	{
 		if (xhr.readyState == 4 && xhr.status == 200){
 			data = JSON.parse(xhr.responseText);
-			//callback(data);
 			adjList_to_nodeEdge(wikipage, data);
 		}
 	}
 }
-/*
-function callback(text){
-	document.getElementById("Bottom").innerHTML = text;
-}
-*/
 
 	
 function adjList_to_nodeEdge(urlStart, data){
@@ -68,11 +54,7 @@ function adjList_to_nodeEdge(urlStart, data){
 	var daStart = urlStart;
 	var daEnd;
 	for(var key in data){
-		//if (!data.hasOwnProperty(key)){
-	//		continue;
-	//	}
-      	var page = key.split('/');
-	
+      	var page = key.split('/');	
 		graphData['nodes'].push({ 
 			id: key,
 			label: page[page.length -1],
@@ -111,23 +93,32 @@ function adjList_to_nodeEdge(urlStart, data){
 		duration: 10000
 	};
 
-	// Configure the algorithm
+	// Configure and start no-overlap display
 	var listener = s.configNoverlap(config);
-	
-	// Start the algorithm:
 	s.startNoverlap();
 
+	//Bind clicks
 	s.bind('clickNode', function(e){
 		var nodeId = e.data.node.id;
-		
-	
-	var shortPath = dijkstras(data, daStart, daEnd);
-	s.graph.nodes().forEach(function(n){
-		for(var i=0; i<shortPath.length; i++){
-			if(shortPath[i] == n.id){
-				n.size = 4;
-				n.color = 'red';
-			}
+		if (adjList_to_nodeEdge.start == undefined) {
+			adjList_to_nodeEdge.start = nodeId;	
+		} else if (adjList_to_nodeEdge.end == undefined){
+			var shortPath = dijkstras(data, adjList_to_nodeEdge.start, nodeId);
+			s.graph.nodes().forEach(function(n){
+				for(var i=0; i<shortPath.length; i++){
+					if(shortPath[i] == n.id){
+						n.size = 5;
+						n.color = 'red';
+					}
+				}
+			});
+		} else {
+			adjList_to_nodeEdge.start = nodeId;
+			s.graph.nodes().forEach(function(n){
+				n.color = '#00FFFF';
+				n.size = 2;
+			});
+
 		}
 	});
 }
