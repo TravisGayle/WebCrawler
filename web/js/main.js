@@ -71,7 +71,10 @@ function adjList_to_nodeEdge(urlStart, data){
 				source: key,
 				target: data[key][i],
 				color: 'lightgreen',
-				type: 'arrow'
+				type: 'arrow',
+				minEdgeSize: 1,
+				maxEdgeSize: 10,
+				size: 7
 			});
 			daEnd = data[key][i];
 		}
