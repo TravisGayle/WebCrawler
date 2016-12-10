@@ -116,7 +116,9 @@ function adjList_to_nodeEdge(urlStart, data){
 	// Start the algorithm:
 	s.startNoverlap();
 
-
+	s.bind('clickNode', function(e){
+		var nodeId = e.data.node.id;
+		
 	
 	var shortPath = dijkstras(data, daStart, daEnd);
 	s.graph.nodes().forEach(function(n){
