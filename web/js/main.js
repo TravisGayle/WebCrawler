@@ -51,12 +51,11 @@ function adjList_to_nodeEdge(data){
 		nodes: [],
 		edges: []
 	}
-	
-	
+	console.log(data);
 	for(var key in data){
-		if (!data.hasOwnProperty(key)){
-			continue;
-		}
+		//if (!data.hasOwnProperty(key)){
+	//		continue;
+	//	}
 		console.log(key);
 		graphData['nodes'].push({ 
 			id: key,
@@ -67,15 +66,16 @@ function adjList_to_nodeEdge(data){
 			size: 2
 		  });
 		//edges
-		for(var i; i < data[key].length; i++){
+		console.log(data, key);
+		for(var i=0; i < data[key].length; i++){
 			graphData['edges'].push({
-				id: 'e'+i,
+				id: key+i,
 				source: key,
 				target: data[key][i],
 				color: 'lightgreen',
 				type: 'arrow'
 			  });
-			console.log(data);
+			console.log("heeey");
 		}
 	}
 	s = new sigma({
@@ -86,5 +86,8 @@ function adjList_to_nodeEdge(data){
 		}
 	});
 }
+// input:  https://en.wikipedia.org/wiki/Food
+// output: Food
+//function(
 
 
