@@ -29,7 +29,7 @@ function Hunt(){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(
-			"http://student00.cse.nd.edu:9001/post",
+			"http://student03.cse.nd.edu:9001/post",
 			url.value,
 			maxPage.value,
 			maxLinks.value
@@ -100,10 +100,10 @@ function adjList_to_nodeEdge(data){
 		}
 	});
 
-/*
+
 	var config = {
 		nodeMargin: .1,
-		scaleNodes: 1.05,
+		scaleNodes: .5,
 		gridSize: 75,
 		easing: 'quadraticInOut',
 		duration: 10000
@@ -112,23 +112,19 @@ function adjList_to_nodeEdge(data){
 	// Configure the algorithm
 	var listener = s.configNoverlap(config);
 	
-	// Bind all events:
-	listener.bind('start stop interpolate', function(event) {
-		console.log(event.type);
-	});
-	
 	// Start the algorithm:
 	s.startNoverlap();
-*/
+
 
 	daStart= data[0]
-	var shortPath =	dijkstras(data, daStart, daEnd);
+	var shortPath = dijkstras(data, daStart, daEnd);
 	for( var key in shortPath){
 		var n = sigmaInstance.graph.nodes(key);
 		key.size = 4;
 		key.color = 'red';	
 	}
 	sigmaInstance.refresh({ skipIndexation: true });
+
 }
 
 
