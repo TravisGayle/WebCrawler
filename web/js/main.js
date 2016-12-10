@@ -18,7 +18,7 @@ function Hunt(){
 		alert("ERROR: " + maxPage.value + " is not a number!");
 	}
 	httpGetAsync(
-			"http://student00.cse.nd.edu:9003/post",
+			"http://student03.cse.nd.edu:9001/post",
 			url.value, 
 			maxPage.value
 			);		
@@ -36,7 +36,6 @@ function httpGetAsync(url, wikipage, maxPages){
 		if (xhr.readyState == 4 && xhr.status == 200){
 			data = JSON.parse(xhr.responseText);
 			callback(data);
-			console.log(data);
 			adjList_to_nodeEdge(data);
 		}
 	}
@@ -78,13 +77,33 @@ function adjList_to_nodeEdge(data){
 			console.log(data);
 		}
 	}
-	s = new sigma({
+	var s = new sigma({
 		graph: graphData,
 		container: 'mynetwork',
 		setting: {
 			defaultNodeColor: '#00FFFF'
 		}
 	});
+/*
+	var config = {
+		nodeMargin: .1,
+		scaleNodes: 1.05,
+		gridSize: 75,
+		easing: 'quadraticInOut',
+		duration: 10000
+	};
+
+	// Configure the algorithm
+	var listener = s.configNoverlap(config);
+	
+	// Bind all events:
+	listener.bind('start stop interpolate', function(event) {
+		console.log(event.type);
+	});
+	
+	// Start the algorithm:
+	s.startNoverlap();
+*/
 }
 
 
