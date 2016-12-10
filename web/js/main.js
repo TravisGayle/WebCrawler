@@ -20,7 +20,7 @@ function flusher(){
 }
 
 function hunt(){
-	var postUrl = "http://student03.cse.nd.edu:9001/post";
+	var postUrl = "http://student00.cse.nd.edu:9001/post";
 	var url = document.getElementById('url1');
 	var maxPage = document.getElementById('maxPage1');
 	var maxLinks = document.getElementById('maxLinks1');
@@ -74,8 +74,8 @@ function adjList_to_nodeEdge(urlStart, data){
 				color: 'lightgreen',
 				type: 'arrow',
 				minEdgeSize: 1,
-				maxEdgeSize: 10,
-				size: 7
+				maxEdgeSize: 100,
+				size: 75
 			});
 			daEnd = data[key][i];
 		}
@@ -91,8 +91,8 @@ function adjList_to_nodeEdge(urlStart, data){
 
 	var config = {
 		nodeMargin: .1,
-		scaleNodes: .5,
-		gridSize: 75,
+		//scaleNodes: .5,
+		//gridSize: 75,
 		easing: 'quadraticInOut',
 		duration: 10000
 	};
