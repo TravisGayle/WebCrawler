@@ -39,7 +39,6 @@ function httpGetAsync(url, wikipage, maxPages, maxLinks){
 		if (xhr.readyState == 4 && xhr.status == 200){
 			data = JSON.parse(xhr.responseText);
 			callback(data);
-			console.log(data);
 			adjList_to_nodeEdge(data);
 		}
 	}
@@ -54,13 +53,15 @@ function adjList_to_nodeEdge(data){
 		nodes: [],
 		edges: []
 	}
+	var daStart;
+	var daEnd;
 	console.log(data);
 	for(var key in data){
 		//if (!data.hasOwnProperty(key)){
 	//		continue;
 	//	}
-       var page = key.split('/');
-		console.log(key);
+      	var page = key.split('/');
+	
 		graphData['nodes'].push({ 
 			id: key,
 			label: page[page.length -1],
@@ -78,8 +79,8 @@ function adjList_to_nodeEdge(data){
 				target: data[key][i],
 				color: 'lightgreen',
 				type: 'arrow'
-			  });
-			console.log("heeey");
+			});
+			daEnd = data[key][i];
 		}
 	}
 	s = new sigma({
@@ -89,9 +90,14 @@ function adjList_to_nodeEdge(data){
 			defaultNodeColor: '#00FFFF'
 		}
 	});
+	daStart= data[0]
+	var shortPath =	dijkstras(data, daStart, daEnd);
+	for( var key in shortPath){
+		var n = sigmaInstance.graph.nodes(key);
+		key.size = 4;
+		key.color = 'red';	
+	}
+	sigmaInstance.refresh({ skipIndexation: true });
 }
-// input:  https://en.wikipedia.org/wiki/Food
-// output: Food
-//function(
 
 
