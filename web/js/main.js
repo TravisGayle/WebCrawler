@@ -47,7 +47,7 @@ function callback(text){
 }
 	
 function adjList_to_nodeEdge(data){
-	var graph = {
+	var graphData = {
 		nodes: [],
 		edges: []
 	}
@@ -58,7 +58,7 @@ function adjList_to_nodeEdge(data){
 			continue;
 		}
 		console.log(key);
-		graph['nodes'].push({ 
+		graphData['nodes'].push({ 
 			id: key,
 			label: "test",
 			x: Math.random(),
@@ -67,22 +67,33 @@ function adjList_to_nodeEdge(data){
 		  });
 		//edges
 		for(var i; i < data[key].length; i++){
-			graph['edges'].push({
+			graphData['edges'].push({
 				id: i,
 				source: key,
 				target: data[key][i] 
 			  });
 		}
 	}
-	//var myGraph = new sigma.classes.graph();
-	//myGraph.read(graph);
-
-	sigma.parsers.json( graph, {
+	s = new sigma({
+		graph: graphData,
+		container: 'mynetwork',
+		setting: {
+			defaultNodeColor: '#ec5148'
+		}
+	});
+/*
+	var myGraph = new sigma.classes.graph();
+	myGraph.read(graph);
+	
+	localStorage.setItem('myStorage', JSON.stringify(graph));
+		
+	sigma.parsers.json( localStorage.getItem('myStorage'), {
 		container: 'mynetwork',
 		settings: {
 			defaultNodeColor: '#ec5148'
 		}
 	});
+*/
 	
 }
 
