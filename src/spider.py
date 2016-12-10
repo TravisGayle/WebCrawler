@@ -75,7 +75,7 @@ class Spider(object):
 		soup = BeautifulSoup(pageTxt, 'html.parser')
 		for index, aTag in enumerate(soup.find_all('a')):
 			#if a page has more links than we can make one request to google for, just take up to _googleMaxReq
-			if index >= self._googleMaxReq:
+			if index >= self._googleMaxReq or index >= self.linksPerPage:
 				break
 
 			#pull all links from page, adding to the google safe browsing threat json and urls array
