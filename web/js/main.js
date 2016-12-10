@@ -30,7 +30,7 @@ function Hunt(){
 	}
 	httpGetAsync(
 			"http://student00.cse.nd.edu:9001/post",
-			url.value, 
+			url.value,
 			maxPage.value,
 			maxLinks.value
 			);		
