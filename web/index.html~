@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>WebCrawler</title>
+	<link rel="icon" tyep="image/jpeg" href="./img/spider-icon.jpg"></link>
+	
+	<!-- JavaScript and CSS inclusions-->
+	<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="./js/sigma.min.js"></script> 
+	<script type="text/javascript" src="./js/sigma.animate.js"></script>
+	<script type="text/javascript" src="./js/sigma.parsers.json.min.js"></script>
+	<script type="text/javascript" src="./js/sigma.layout.noverlap.js"></script>
+	<script type="text/javascript" src="./js/main.js" ></script>
+	<script type="text/javascript" src="./js/graph.js" ></script>
+	<script type="text/javascript" src="./js/dijkstras.js"></script>
+	<link rel="stylesheet"  href="./css/main.css"></link>
+</head>
+
+<body>
+	<div class="wrap">
+		<div id="myGraph">
+			<h1> LINK HUNTER </h1>
+
+			<p> This program takes in a url as input and
+				finds all links to that site. It then outputs
+				the information in our output section. It will
+				win Wikipedia</p>
+<div id="mynetwork">
+	<!-- <script>graphMe();</script> -->
+  <div id="graph-container"></div>
+</div>
+
+
+
+			</div>
+
+		<div id="Info">
+			<div id="container">
+				<div id="Top">
+
+					<h1> INPUT to send to python script <h1>
+
+					<form name="myform" id="urlForm" action="">
+						<h4>Enter URL: </h4>
+					      <p> <input type="text" id="url1" name="url"/></p>
+						<h4>Max Page Count: </h4>
+						<p><input type="number" id="maxPage1" name="MaxPages"/></p>
+
+						<h4>Max Link Count: </h4>
+						<p><input type="number" id="maxLinks1" name="MaxLinks"/></p>
+						<input id="urlButton" type="button" value="HUNT" />
+
+					</form>
+<!--
+					<form name="myform2" id="urlForm" action="">
+					      <p>Enter Max Depth <input type="text" id="url1" name="url"/></p>
+					      <input id="urlButton" type="button" onclick="Hunt();" value="HUNT" />
+					</form>
+					-->
+				</div>
+			<!--	<div id="Bottom">
+					 <h1> OUTPUT received from python script </h1>
+					 <p> Start by getting all of the urls scraped below:</p>
+				 </div> -->
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

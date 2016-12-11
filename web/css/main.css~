@@ -90,8 +90,8 @@ width: 100%;
   width: 760px;
   height: 600px;
   border: 1px solid lightgray;
-  width: 95%;
-  height: 95%;
+  //width: 60%;
+  //height: 60%;
   margin: 0 auto;
   background-color: white;
 

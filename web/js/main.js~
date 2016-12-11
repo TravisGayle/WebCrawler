@@ -42,7 +42,6 @@ function flusher(){
 
 function hunt(){
     getVal();
-    flusher();
 	var postUrl = "http://student00.cse.nd.edu:9998/post";
 	var url = document.getElementById('url1');
 	var maxPage = document.getElementById('maxPage1');
